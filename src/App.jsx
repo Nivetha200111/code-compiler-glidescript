@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
-import { Play, Trash2, Database as DbIcon, PanelRight, LogIn, LogOut, Server, Monitor, FilePlus2, BookOpen, FileCode2 } from 'lucide-react'
+import { Play, Trash2, Database as DbIcon, PanelRight, LogIn, LogOut, Server, Monitor, FilePlus2, BookOpen, FileCode2, Maximize2, Minimize2, X } from 'lucide-react'
 import CodeEditor from './components/Editor.jsx'
 import Console from './components/Console.jsx'
 import TableViewer from './components/TableViewer.jsx'
@@ -39,6 +39,8 @@ export default function App() {
   const [activeExample, setActiveExample] = useState('gr-basic')
   const [rightTab, setRightTab] = useState('console')
   const [dbVersion, setDbVersion] = useState(0)
+  const [rightPanelOpen, setRightPanelOpen] = useState(true)
+  const [editorExpanded, setEditorExpanded] = useState(false)
   const [running, setRunning] = useState(false)
   const [session, setSession] = useState({ loading: true, authenticated: false, user: null, provider: 'none' })
   const [authOpen, setAuthOpen] = useState(false)
@@ -84,6 +86,7 @@ export default function App() {
       if (mode !== 'server') {
         clientWorkspaceRef.current?.run()
         setRightTab('preview')
+        setRightPanelOpen(true)
         setRunning(false)
         return
       }
@@ -101,6 +104,7 @@ export default function App() {
             }`,
       })
       setRightTab('console')
+      setRightPanelOpen(true)
       setRunning(false)
     })
   }, [mode])
@@ -261,6 +265,10 @@ export default function App() {
   const previewLabel = mode === 'server' ? 'Console' : mode === 'client' ? 'Form' : 'Producer'
   const userEmail = session.user?.email || 'Account'
   const userInitial = userEmail.trim().charAt(0).toUpperCase() || 'U'
+  const showRightPanel = rightPanelOpen && !editorExpanded
+  const workbenchClass = `workbench-grid flex-1 min-h-0 ${
+    editorExpanded ? 'workbench-grid-editor-expanded' : rightPanelOpen ? '' : 'workbench-grid-panel-closed'
+  }`
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 md:h-screen md:overflow-hidden">
@@ -398,18 +406,20 @@ export default function App() {
         </div>
       </header>
 
-      <div className="workbench-grid flex-1 min-h-0">
-        <motion.aside
-          className="hidden min-h-0 border-r border-slate-300/80 bg-stone-50 lg:flex lg:flex-col"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.22, ease: 'easeOut' }}
-        >
-          {page === 'lessons' ? <ExampleSidebar onPick={pickExample} activeId={activeExample} /> : <CustomSidebar />}
-        </motion.aside>
+      <div className={workbenchClass}>
+        {!editorExpanded && (
+          <motion.aside
+            className="hidden min-h-0 border-r border-slate-300/80 bg-stone-50 lg:flex lg:flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            {page === 'lessons' ? <ExampleSidebar onPick={pickExample} activeId={activeExample} /> : <CustomSidebar />}
+          </motion.aside>
+        )}
 
         <motion.main
-          className="flex h-[560px] min-w-0 flex-col border-r border-slate-300/80 bg-[#0f1720] md:h-auto md:min-h-0"
+          className={`flex ${editorExpanded ? 'h-[calc(100vh-4rem)]' : 'h-[560px]'} min-w-0 flex-col border-r border-slate-300/80 bg-[#0f1720] md:h-auto md:min-h-0`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
@@ -419,24 +429,44 @@ export default function App() {
               <div className="font-mono text-xs font-medium text-slate-200">{fileName}</div>
               <div className="hidden truncate text-[11px] text-slate-500 sm:block">{editorTitle}</div>
             </div>
-            <span className="ml-auto rounded border border-slate-700 px-2 py-1 font-mono text-[10px] uppercase tracking-wide text-slate-400">
-              {mode === 'server' ? 'GlideScript' : mode === 'client' ? 'g_form' : 'Producer'}
-            </span>
+            <div className="ml-auto flex items-center gap-2">
+              {!showRightPanel && !editorExpanded && (
+                <IconButton title="Open output panel" onClick={() => setRightPanelOpen(true)} icon={PanelRight} />
+              )}
+              <IconButton
+                title={editorExpanded ? 'Restore editor layout' : 'Expand editor'}
+                onClick={() => setEditorExpanded((value) => !value)}
+                icon={editorExpanded ? Minimize2 : Maximize2}
+              />
+              <span className="rounded border border-slate-700 px-2 py-1 font-mono text-[10px] uppercase tracking-wide text-slate-400">
+                {mode === 'server' ? 'GlideScript' : mode === 'client' ? 'g_form' : 'Producer'}
+              </span>
+            </div>
           </div>
           <div className="flex-1 min-h-0">
             <CodeEditor value={editorValue} onChange={handleCodeChange} onRun={run} />
           </div>
         </motion.main>
 
-        <motion.section
-          className="flex h-[440px] min-w-0 flex-col bg-white md:h-auto md:min-h-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.24, ease: 'easeOut' }}
-        >
+        {showRightPanel && (
+          <motion.section
+            className="flex h-[440px] min-w-0 flex-col bg-white md:h-auto md:min-h-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.24, ease: 'easeOut' }}
+          >
           <div className="flex h-11 shrink-0 items-center border-b border-slate-300/80 bg-stone-50 px-2">
             <TabBtn active={rightTab === 'console' || rightTab === 'preview'} onClick={() => setRightTab(mode === 'server' ? 'console' : 'preview')} icon={PanelRight} label={previewLabel} count={entries.length} />
             <TabBtn active={rightTab === 'database'} onClick={() => setRightTab('database')} icon={DbIcon} label="Database" />
+            <button
+              type="button"
+              onClick={() => setRightPanelOpen(false)}
+              title="Close output panel"
+              aria-label="Close output panel"
+              className="ml-auto grid h-8 w-8 place-items-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-800"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
           <div className="flex-1 min-h-0">
             <AnimatePresence mode="wait">
@@ -467,7 +497,8 @@ export default function App() {
               </motion.div>
             </AnimatePresence>
           </div>
-        </motion.section>
+          </motion.section>
+        )}
       </div>
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuthed={onAuthed} />
@@ -512,6 +543,22 @@ function ModeBtn({ active, onClick, icon: Icon, label, layoutId }) {
       {active && <motion.span layoutId={layoutId} className="absolute inset-0 rounded bg-gradient-to-br from-cyan-300 to-cyan-500" transition={{ type: 'spring', stiffness: 520, damping: 34 }} />}
       <Icon className="relative h-3.5 w-3.5" />
       <span className="relative">{label}</span>
+    </motion.button>
+  )
+}
+
+function IconButton({ title, onClick, icon: Icon }) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      whileHover={{ y: -1 }}
+      whileTap={{ scale: 0.97 }}
+      title={title}
+      aria-label={title}
+      className="grid h-7 w-7 place-items-center rounded border border-slate-700 text-slate-400 transition-colors hover:border-slate-500 hover:bg-slate-800 hover:text-slate-100"
+    >
+      <Icon className="h-3.5 w-3.5" />
     </motion.button>
   )
 }

@@ -42,11 +42,24 @@ select {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(20rem, 38vw);
   }
+
+  .workbench-grid.workbench-grid-panel-closed,
+  .workbench-grid.workbench-grid-editor-expanded {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (min-width: 1024px) {
   .workbench-grid {
     grid-template-columns: 17rem minmax(28rem, 1fr) minmax(23rem, 36vw);
+  }
+
+  .workbench-grid.workbench-grid-panel-closed {
+    grid-template-columns: 17rem minmax(28rem, 1fr);
+  }
+
+  .workbench-grid.workbench-grid-editor-expanded {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

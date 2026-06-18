@@ -51,12 +51,11 @@ export default function CodeEditor({ value, onChange, onRun }) {
         fontSize: 13.5,
         fontFamily: 'JetBrains Mono, monospace',
         fontLigatures: true,
-        // IntelliSense on — hover docs + completion for the Glide APIs are the
-        // main teaching aid (typings come from glide-types.js).
-        quickSuggestions: true,
-        suggestOnTriggerCharacters: true,
-        tabCompletion: 'on',
-        parameterHints: { enabled: true },
+        quickSuggestions: false,
+        suggestOnTriggerCharacters: false,
+        tabCompletion: 'off',
+        wordBasedSuggestions: false,
+        parameterHints: { enabled: false },
         minimap: { enabled: false },
         scrollBeyondLastLine: false,
         padding: { top: 14, bottom: 14 },
