@@ -274,7 +274,7 @@ export default function App() {
     <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 md:h-screen md:overflow-hidden">
       <header className="shrink-0 border-b border-now-700 bg-gradient-to-r from-now-900 via-now-800 to-now-900 text-white shadow-glow">
         <div className="flex min-h-16 flex-col gap-3 px-4 py-3 md:flex-row md:flex-wrap md:items-center lg:h-16 lg:flex-nowrap lg:px-5 lg:py-0">
-          <div className="flex min-w-0 items-center gap-3 md:min-w-[248px]">
+          <div className="flex min-w-0 shrink-0 items-center gap-3 md:min-w-[248px]">
             <LogoMark />
             <div className="min-w-0">
               <h1 className="truncate text-[15px] font-semibold tracking-normal text-white">
@@ -324,7 +324,7 @@ export default function App() {
           </label>
 
           <LayoutGroup>
-            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2">
+            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2 lg:shrink-0 lg:flex-nowrap">
               <ModeBtn layoutId="active-page" active={page === 'lessons'} onClick={() => setPage('lessons')} icon={BookOpen} label="Lessons" />
               <ModeBtn
                 layoutId="active-page"
@@ -342,14 +342,14 @@ export default function App() {
           </LayoutGroup>
 
           <LayoutGroup>
-            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2">
+            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2 lg:shrink-0 lg:flex-nowrap">
               <ModeBtn layoutId="active-mode" active={mode === 'server'} onClick={() => setMode('server')} icon={Server} label="Server" />
               <ModeBtn layoutId="active-mode" active={mode === 'client'} onClick={() => setMode('client')} icon={Monitor} label="Client" />
               <ModeBtn layoutId="active-mode" active={mode === 'producer'} onClick={() => setMode('producer')} icon={FilePlus2} label="Producer" />
             </div>
           </LayoutGroup>
 
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5 lg:ml-auto lg:flex-nowrap">
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5 lg:ml-auto lg:shrink-0 lg:flex-nowrap">
             {session.authenticated && (
               <PlaygroundsBar
                 playgrounds={playgrounds}
