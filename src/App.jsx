@@ -273,18 +273,18 @@ export default function App() {
   return (
     <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 md:h-screen md:overflow-hidden">
       <header className="shrink-0 border-b border-now-700 bg-gradient-to-r from-now-900 via-now-800 to-now-900 text-white shadow-glow">
-        <div className="flex min-h-16 flex-col gap-3 px-4 py-3 md:flex-row md:flex-wrap md:items-center lg:h-16 lg:flex-nowrap lg:px-5 lg:py-0">
-          <div className="flex min-w-0 shrink-0 items-center gap-3 md:min-w-[248px]">
+        <div className="flex min-h-16 flex-col gap-3 px-4 py-3 md:flex-row md:flex-wrap md:items-center xl:h-16 xl:flex-nowrap xl:px-5 xl:py-0">
+          <div className="flex min-w-0 shrink-0 items-center gap-3 md:w-[284px] 2xl:w-[340px]">
             <LogoMark />
             <div className="min-w-0">
               <h1 className="truncate text-[15px] font-semibold tracking-normal text-white">
                 GlideScript <span className="text-cyan-300">Playground</span>
               </h1>
               <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-300/80">
-                <span>{totalExamples} examples</span>
-                <span className="h-1 w-1 rounded-full bg-white/25" />
-                <span>{db.tableNames().length} mock tables</span>
-                <span className="h-1 w-1 rounded-full bg-white/25" />
+                <span className="hidden 2xl:inline">{totalExamples} examples</span>
+                <span className="hidden h-1 w-1 rounded-full bg-white/25 2xl:inline-block" />
+                <span className="hidden 2xl:inline">{db.tableNames().length} mock tables</span>
+                <span className="hidden h-1 w-1 rounded-full bg-white/25 2xl:inline-block" />
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={status?.text || 'Ready'}
@@ -324,7 +324,7 @@ export default function App() {
           </label>
 
           <LayoutGroup>
-            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2 lg:shrink-0 lg:flex-nowrap">
+            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-1 xl:shrink-0 xl:flex-nowrap 2xl:ml-2">
               <ModeBtn layoutId="active-page" active={page === 'lessons'} onClick={() => setPage('lessons')} icon={BookOpen} label="Lessons" />
               <ModeBtn
                 layoutId="active-page"
@@ -342,14 +342,14 @@ export default function App() {
           </LayoutGroup>
 
           <LayoutGroup>
-            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-2 lg:shrink-0 lg:flex-nowrap">
+            <div className="flex flex-wrap items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1 lg:ml-1 xl:shrink-0 xl:flex-nowrap 2xl:ml-2">
               <ModeBtn layoutId="active-mode" active={mode === 'server'} onClick={() => setMode('server')} icon={Server} label="Server" />
               <ModeBtn layoutId="active-mode" active={mode === 'client'} onClick={() => setMode('client')} icon={Monitor} label="Client" />
               <ModeBtn layoutId="active-mode" active={mode === 'producer'} onClick={() => setMode('producer')} icon={FilePlus2} label="Producer" />
             </div>
           </LayoutGroup>
 
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5 lg:ml-auto lg:shrink-0 lg:flex-nowrap">
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5 lg:ml-auto xl:shrink-0 xl:flex-nowrap">
             {session.authenticated && (
               <PlaygroundsBar
                 playgrounds={playgrounds}
@@ -387,10 +387,12 @@ export default function App() {
               onClick={clearConsole}
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex h-9 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+              title="Clear console"
+              aria-label="Clear console"
+              className="inline-flex h-9 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white 2xl:px-3"
             >
               <Trash2 className="h-4 w-4" />
-              Clear
+              <span className="hidden 2xl:inline">Clear</span>
             </motion.button>
             <motion.button
               whileHover={{ y: -1 }}
@@ -534,6 +536,7 @@ function ModeBtn({ active, onClick, icon: Icon, label, layoutId }) {
   return (
     <motion.button
       onClick={onClick}
+      title={label}
       whileHover={{ y: -1 }}
       whileTap={{ scale: 0.97 }}
       className={`relative inline-flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold transition-colors ${
@@ -542,7 +545,7 @@ function ModeBtn({ active, onClick, icon: Icon, label, layoutId }) {
     >
       {active && <motion.span layoutId={layoutId} className="absolute inset-0 rounded bg-gradient-to-br from-cyan-300 to-cyan-500" transition={{ type: 'spring', stiffness: 520, damping: 34 }} />}
       <Icon className="relative h-3.5 w-3.5" />
-      <span className="relative">{label}</span>
+      <span className={`relative ${active ? '' : 'hidden 2xl:inline'}`}>{label}</span>
     </motion.button>
   )
 }

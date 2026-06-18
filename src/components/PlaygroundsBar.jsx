@@ -57,7 +57,7 @@ export default function PlaygroundsBar({ playgrounds, onSave, onLoad, onDelete, 
           className="inline-flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
         >
           {justSaved ? <Check className="h-4 w-4 text-cyan-300" /> : <Save className="h-4 w-4" />}
-          <span className="hidden sm:inline">{justSaved ? 'Saved' : 'Save'}</span>
+          <span className="hidden 2xl:inline">{justSaved ? 'Saved' : 'Save'}</span>
         </motion.button>
 
         <AnimatePresence>
@@ -105,7 +105,7 @@ export default function PlaygroundsBar({ playgrounds, onSave, onLoad, onDelete, 
           className="inline-flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
         >
           <FolderOpen className="h-4 w-4" />
-          <span className="hidden sm:inline">My scripts</span>
+          <span className="hidden 2xl:inline">My scripts</span>
           {playgrounds.length > 0 && (
             <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-slate-200">{playgrounds.length}</span>
           )}
