@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
-import { Play, Trash2, Database as DbIcon, Activity, PanelRight, LogIn, LogOut, Server, Monitor, FilePlus2, BookOpen, FileCode2 } from 'lucide-react'
+import { Play, Trash2, Database as DbIcon, PanelRight, LogIn, LogOut, Server, Monitor, FilePlus2, BookOpen, FileCode2 } from 'lucide-react'
 import CodeEditor from './components/Editor.jsx'
 import Console from './components/Console.jsx'
 import TableViewer from './components/TableViewer.jsx'
@@ -8,6 +8,7 @@ import ExampleSidebar from './components/ExampleSidebar.jsx'
 import ClientWorkspace from './components/ClientWorkspace.jsx'
 import AuthModal from './components/AuthModal.jsx'
 import PlaygroundsBar from './components/PlaygroundsBar.jsx'
+import LogoMark from './components/LogoMark.jsx'
 import { runScript, getDatabase, resetDatabase } from './engine/runtime.js'
 import { EXAMPLES, DEFAULT_CODE, DEFAULT_CLIENT_CODE, DEFAULT_PRODUCER_CODE } from './data/examples.js'
 
@@ -51,9 +52,8 @@ export default function App() {
     let alive = true
 
     async function loadSession() {
-      // Cloudflare Access is the single source of truth. /api/session reflects
-      // the Google identity injected by Access; locally (Vite dev) the Pages
-      // Function isn't served, so we treat that as signed out.
+      // Plain Vite dev does not serve the Pages Functions, so /api/session is
+      // only available in production or via `npm run dev:full`.
       try {
         const response = await fetch('/api/session', { headers: { accept: 'application/json' } })
         const type = response.headers.get('content-type') || ''
@@ -259,19 +259,15 @@ export default function App() {
         : 'Record producer'
   const fileName = mode === 'server' ? (page === 'custom' ? 'custom.js' : 'script.js') : mode === 'client' ? 'client_script.js' : 'record_producer.js'
   const previewLabel = mode === 'server' ? 'Console' : mode === 'client' ? 'Form' : 'Producer'
+  const userEmail = session.user?.email || 'Account'
+  const userInitial = userEmail.trim().charAt(0).toUpperCase() || 'U'
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 md:h-screen md:overflow-hidden">
       <header className="shrink-0 border-b border-now-700 bg-gradient-to-r from-now-900 via-now-800 to-now-900 text-white shadow-glow">
         <div className="flex min-h-16 flex-col gap-3 px-4 py-3 md:flex-row md:flex-wrap md:items-center lg:h-16 lg:flex-nowrap lg:px-5 lg:py-0">
-          <div className="flex min-w-0 items-center gap-3 md:min-w-[260px]">
-            <motion.div
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 shadow-[0_4px_14px_-4px_rgba(30,180,90,0.7)]"
-              whileHover={{ y: -1, rotate: -2 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-            >
-              <Activity className="h-[18px] w-[18px] text-now-900" strokeWidth={2.6} />
-            </motion.div>
+          <div className="flex min-w-0 items-center gap-3 md:min-w-[248px]">
+            <LogoMark />
             <div className="min-w-0">
               <h1 className="truncate text-[15px] font-semibold tracking-normal text-white">
                 GlideScript <span className="text-cyan-300">Playground</span>
@@ -345,7 +341,7 @@ export default function App() {
             </div>
           </LayoutGroup>
 
-          <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5 lg:ml-auto lg:flex-nowrap">
             {session.authenticated && (
               <PlaygroundsBar
                 playgrounds={playgrounds}
@@ -360,10 +356,13 @@ export default function App() {
                 onClick={signOut}
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex h-9 min-w-0 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                title={`Signed in as ${userEmail}. Sign out`}
+                className="inline-flex h-9 min-w-0 shrink-0 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
               >
-                <span className="hidden max-w-40 truncate sm:inline">{session.user?.email}</span>
-                <LogOut className="h-4 w-4" />
+                <span className="grid h-5 w-5 shrink-0 place-items-center rounded bg-cyan-300/15 font-mono text-[11px] font-bold text-cyan-200 ring-1 ring-cyan-300/25">
+                  {userInitial}
+                </span>
+                <LogOut className="h-4 w-4 shrink-0" />
               </motion.button>
             ) : (
               <motion.button

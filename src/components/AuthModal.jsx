@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, Loader2, Mail, Lock, User, Zap } from 'lucide-react'
+import { X, Loader2, Mail, Lock, User } from 'lucide-react'
+import LogoMark from './LogoMark.jsx'
 
 export default function AuthModal({ open, onClose, onAuthed }) {
   const [mode, setMode] = useState('login')
@@ -59,9 +60,7 @@ export default function AuthModal({ open, onClose, onAuthed }) {
           >
             <div className="relative bg-gradient-to-r from-now-900 via-now-800 to-now-900 px-5 py-4 text-white">
               <div className="flex items-center gap-2.5">
-                <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600">
-                  <Zap className="h-4 w-4 text-now-900" strokeWidth={2.6} />
-                </div>
+                <LogoMark className="h-8 w-8" textClassName="text-[11px]" />
                 <div>
                   <h2 className="text-sm font-semibold">{mode === 'signup' ? 'Create your account' : 'Welcome back'}</h2>
                   <p className="text-[11px] text-slate-300/80">{mode === 'signup' ? 'Save and sync your playgrounds' : 'Sign in to your playgrounds'}</p>

@@ -43,17 +43,18 @@ export default function PlaygroundsBar({ playgrounds, onSave, onLoad, onDelete, 
   }
 
   return (
-    <div ref={wrapRef} className="flex items-center gap-2">
+    <div ref={wrapRef} className="flex shrink-0 items-center gap-1 rounded-lg border border-white/15 bg-white/5 p-1">
       {/* Save */}
       <div className="relative">
         <motion.button
+          aria-label={justSaved ? 'Saved script' : 'Save script'}
           onClick={() => {
             setSaveOpen((v) => !v)
             setListOpen(false)
           }}
           whileHover={{ y: -1 }}
           whileTap={{ scale: 0.98 }}
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+          className="inline-flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
         >
           {justSaved ? <Check className="h-4 w-4 text-cyan-300" /> : <Save className="h-4 w-4" />}
           <span className="hidden sm:inline">{justSaved ? 'Saved' : 'Save'}</span>
@@ -94,13 +95,14 @@ export default function PlaygroundsBar({ playgrounds, onSave, onLoad, onDelete, 
       {/* My scripts */}
       <div className="relative">
         <motion.button
+          aria-label="My scripts"
           onClick={() => {
             setListOpen((v) => !v)
             setSaveOpen(false)
           }}
           whileHover={{ y: -1 }}
           whileTap={{ scale: 0.98 }}
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-white/15 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+          className="inline-flex h-7 items-center gap-1.5 rounded px-2.5 text-xs font-semibold text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
         >
           <FolderOpen className="h-4 w-4" />
           <span className="hidden sm:inline">My scripts</span>
