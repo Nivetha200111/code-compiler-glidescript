@@ -33,6 +33,23 @@ select {
   transition-timing-function: ease;
 }
 
+.workbench-grid {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .workbench-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 38vw);
+  }
+}
+
+@media (min-width: 1024px) {
+  .workbench-grid {
+    grid-template-columns: 17rem minmax(28rem, 1fr) minmax(23rem, 36vw);
+  }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

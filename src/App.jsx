@@ -260,10 +260,10 @@ export default function App() {
   const previewLabel = mode === 'server' ? 'Console' : mode === 'client' ? 'Form' : 'Producer'
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 lg:h-screen lg:overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-stone-100 text-slate-950 md:h-screen md:overflow-hidden">
       <header className="shrink-0 border-b border-now-700 bg-gradient-to-r from-now-900 via-now-800 to-now-900 text-white shadow-glow">
-        <div className="flex min-h-16 flex-col gap-3 px-4 py-3 lg:h-16 lg:flex-row lg:items-center lg:px-5 lg:py-0">
-          <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-h-16 flex-col gap-3 px-4 py-3 md:flex-row md:flex-wrap md:items-center lg:h-16 lg:flex-nowrap lg:px-5 lg:py-0">
+          <div className="flex min-w-0 items-center gap-3 md:min-w-[260px]">
             <motion.div
               className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 shadow-[0_4px_14px_-4px_rgba(30,180,90,0.7)]"
               whileHover={{ y: -1, rotate: -2 }}
@@ -296,7 +296,7 @@ export default function App() {
             </div>
           </div>
 
-          <label className="flex items-center gap-2 lg:hidden">
+          <label className="flex items-center gap-2 md:w-72 lg:hidden">
             <span className="text-xs font-medium text-slate-300">Example</span>
             <select
               value={activeExample}
@@ -389,20 +389,20 @@ export default function App() {
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 lg:grid lg:grid-cols-[17rem_minmax(28rem,1fr)_minmax(23rem,36vw)]">
+      <div className="workbench-grid flex-1 min-h-0">
         <motion.aside
-          className="hidden min-h-0 border-r border-slate-300/80 bg-stone-50 md:flex md:flex-col"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="hidden min-h-0 border-r border-slate-300/80 bg-stone-50 lg:flex lg:flex-col"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
         >
           {page === 'lessons' ? <ExampleSidebar onPick={pickExample} activeId={activeExample} /> : <CustomSidebar />}
         </motion.aside>
 
         <motion.main
-          className="flex h-[560px] min-w-0 flex-col border-r border-slate-300/80 bg-[#0f1720] lg:h-auto lg:min-h-0"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="flex h-[560px] min-w-0 flex-col border-r border-slate-300/80 bg-[#0f1720] md:h-auto md:min-h-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
         >
           <div className="flex h-11 shrink-0 items-center gap-3 border-b border-slate-800 bg-[#111923] px-4">
@@ -420,9 +420,9 @@ export default function App() {
         </motion.main>
 
         <motion.section
-          className="flex h-[440px] min-w-0 flex-col bg-white lg:h-auto lg:min-h-0"
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex h-[440px] min-w-0 flex-col bg-white md:h-auto md:min-h-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
         >
           <div className="flex h-11 shrink-0 items-center border-b border-slate-300/80 bg-stone-50 px-2">
