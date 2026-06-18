@@ -1,0 +1,7 @@
+name = "glidescript-playground"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "glidescript-playground"
+database_id = "4e4b2466-8391-41ab-99b7-30569de70f9e"
