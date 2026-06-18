@@ -12,7 +12,12 @@ export async function onRequestGet({ env, request }) {
     .bind(user.email)
     .all()
 
-  return json({ snapshots: results.map((row) => ({ ...row, data: JSON.parse(row.data) })) })
+  return json({
+    snapshots: results.map((row) => ({
+      ...row,
+      data: safeParseData(row.data),
+    })),
+  })
 }
 
 export async function onRequestPost({ env, request }) {
@@ -26,15 +31,23 @@ export async function onRequestPost({ env, request }) {
   const data = JSON.stringify(body.data || {})
 
   // Upsert by (user, name) so re-saving the same name updates instead of
-  // creating duplicates.
-  const existing = await env.DB.prepare('select id from playground_snapshots where user_email = ? and name = ?')
+  // creating duplicates. If older duplicates already exist, keep the newest
+  // row and remove the rest during the save.
+  const existingRows = await env.DB.prepare(
+    'select id from playground_snapshots where user_email = ? and name = ? order by updated_at desc',
+  )
     .bind(user.email, name)
-    .first()
+    .all()
+  const existing = existingRows.results?.[0]
 
   if (existing) {
-    await env.DB.prepare('update playground_snapshots set data = ?, updated_at = datetime("now") where id = ?')
-      .bind(data, existing.id)
-      .run()
+    const batch = [
+      env.DB.prepare('update playground_snapshots set data = ?, updated_at = datetime("now") where id = ?').bind(data, existing.id),
+    ]
+    for (const duplicate of existingRows.results.slice(1)) {
+      batch.push(env.DB.prepare('delete from playground_snapshots where id = ? and user_email = ?').bind(duplicate.id, user.email))
+    }
+    await env.DB.batch(batch)
     return json({ id: existing.id, name, updated: true })
   }
 
@@ -59,4 +72,12 @@ export async function onRequestDelete({ env, request }) {
 
   await env.DB.prepare('delete from playground_snapshots where id = ? and user_email = ?').bind(id, user.email).run()
   return json({ ok: true })
+}
+
+function safeParseData(value) {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return {}
+  }
 }

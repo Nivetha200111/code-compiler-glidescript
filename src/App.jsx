@@ -238,7 +238,8 @@ export default function App() {
   async function deletePlayground(snap) {
     setPlaygrounds((list) => list.filter((p) => p.id !== snap.id))
     try {
-      await fetch(`/api/playgrounds?id=${encodeURIComponent(snap.id)}`, { method: 'DELETE' })
+      const res = await fetch(`/api/playgrounds?id=${encodeURIComponent(snap.id)}`, { method: 'DELETE' })
+      if (!res.ok) await refreshPlaygrounds()
     } catch {
       refreshPlaygrounds()
     }
@@ -344,7 +345,16 @@ export default function App() {
             </div>
           </LayoutGroup>
 
-          <div className="flex items-center gap-2 lg:ml-auto">
+          <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
+            {session.authenticated && (
+              <PlaygroundsBar
+                playgrounds={playgrounds}
+                onSave={savePlayground}
+                onLoad={loadPlayground}
+                onDelete={deletePlayground}
+                busy={pgBusy}
+              />
+            )}
             {session.authenticated ? (
               <motion.button
                 onClick={signOut}
